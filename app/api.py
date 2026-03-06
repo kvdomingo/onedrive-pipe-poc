@@ -47,8 +47,8 @@ async def webhook(
     logger.info(f"Received {len(file_bytes):,} bytes")
 
     background_tasks.add_task(etl, file_bytes)
-    response.status_code = status.HTTP_202_ACCEPTED
-    return {"message": "ok"}
+    response.status_code = status.HTTP_200_OK
+    return {"status": "ok"}
 
 
 if __name__ == "__main__":

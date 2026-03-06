@@ -69,18 +69,19 @@
       - **Parameters**
         - **File**: the exact file path
         - **Infer Content Type**: Yes
-   3. *HTTP Webhook*
+   3. *HTTP*
       - **Parameters**
-        - **Subscribe Method**: POST
-        - **Subscribe URI**: `https://your_free_ngrok.domain/api/webhook`
-        - **Subscribe Body**: File content
-        - **Advanced parameters**: Subscribe Headers
-        - **Subscribe Headers**:
-          - | Authorization | Bearer your_WEBHOOK_SECRET_from_.env |
+        - **URI**: `https://your_free_ngrok.domain/api/webhook`
+        - **Method**: POST
+        - **Headers**:
           - | Content-Type | application/octet-stream |
+        - **Body**: File content
+        - **Advanced parameters**: Authentication
+        - **Authentication type**: Raw
+        - **Authentication value**: Bearer your_WEBHOOK_SECRET_from_.env
 
-   > [!INFO]
-   > **HTTP Webhook** is a "premium" step, which is why a Premium account is needed.
+> [!NOTE]
+> **HTTP** is a "premium" step, which is why a Premium account is needed.
 
 5. Save and turn on the automation.
 6. To test, edit the file in OneDrive. You should see some terminal logs shortly.
