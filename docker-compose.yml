@@ -1,0 +1,15 @@
+name: onedrive-pipe-poc
+
+services:
+  ngrok:
+    image: ngrok/ngrok:latest
+    restart: unless-stopped
+    tty: true
+    stdin_open: true
+    env_file: .env
+    command:
+      - http
+      - --url=${NGROK_DOMAIN}
+      - "8000"
+    network_mode: host
+    
