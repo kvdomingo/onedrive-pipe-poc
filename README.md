@@ -1,5 +1,12 @@
 # onedrive-pipe-poc
 
+Proof-of-concept pipeline that turns OneDrive file changes into local ETL. When
+an Excel file in OneDrive is modified, Power Automate sends its content to a
+webhook; this service receives the payload, persists the Excel, and converts it
+to Parquet using [Hamilton](https://hamilton.dagworks.io) and
+[Polars](https://polars.apache.org). Outputs are written under `app/uploads/`.
+Built with FastAPI and ngrok for local tunneling.
+
 ## Prerequisites
 
 ### Accounts
