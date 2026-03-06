@@ -34,6 +34,8 @@
     ```shell
     mise trust -y
     mise install -y
+    pip install -U prek
+    prek install
     uv sync
     ```
 
