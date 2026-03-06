@@ -1,12 +1,14 @@
 from datetime import datetime
+from typing import Any, Coroutine, cast
 
-from aiofiles import open
-from fastapi import FastAPI, Request, Response, Security, status
+from fastapi import BackgroundTasks, FastAPI, Request, Response, Security, status
 from fastapi.responses import PlainTextResponse
+from hamilton import async_driver
+from hamilton.async_driver import AsyncDriver
 from loguru import logger
 
+from app import etl as _etl
 from app.auth import require_bearer
-from app.settings import settings
 
 app = FastAPI(
     title="OneDrive Pipe POC",
@@ -21,19 +23,30 @@ async def health():
     return "ok"
 
 
+async def etl(file_bytes: bytes):
+    dr = await cast(
+        Coroutine[Any, Any, AsyncDriver],
+        async_driver.Builder().with_modules(_etl).build(),
+    )
+    await dr.execute(
+        ["parquet"],
+        inputs={"data_bytes": file_bytes},
+    )
+
+
 @app.post("/webhook", dependencies=[Security(require_bearer)])
-async def webhook(request: Request, response: Response):
+async def webhook(
+    request: Request,
+    response: Response,
+    background_tasks: BackgroundTasks,
+):
     now = datetime.now().isoformat()
     logger.info(f"Webhook received {now}")
 
     file_bytes = await request.body()
     logger.info(f"Received {len(file_bytes):,} bytes")
 
-    async with open(
-        settings.BASE_DIR / "app/uploads" / f"{now.replace(':', '-')}.xlsx", "wb"
-    ) as f:
-        await f.write(file_bytes)
-
+    background_tasks.add_task(etl, file_bytes)
     response.status_code = status.HTTP_202_ACCEPTED
     return {"message": "ok"}
 

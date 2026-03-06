@@ -79,5 +79,9 @@
           - | Authorization | Bearer your_WEBHOOK_SECRET_from_.env |
           - | Content-Type | application/octet-stream |
 
+   > [!INFO]
+   > **HTTP Webhook** is a "premium" step, which is why a Premium account is needed.
+
 5. Save and turn on the automation.
 6. To test, edit the file in OneDrive. You should see some terminal logs shortly.
+   Excel and Parquet files should be written in [app/uploads](./app/uploads/).
